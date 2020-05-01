@@ -1,0 +1,229 @@
+import java_cup.runtime.*;
+
+//terminal
+
+//types
+terminal VOID;
+terminal BOOLEAN;
+terminal INT;
+terminal FLOAT;
+
+terminal java.lang.String ID; //name
+
+//keywords
+terminal IF;
+terminal ELSE;
+terminal FOR;
+terminal WHILE;
+terminal BREAK;
+terminal CONTINUE;
+terminal RETURN;
+
+//literals
+terminal java.lang.Number INTEGER_LITERAL;
+terminal java.lang.Number FLOAT_LITERAL;
+terminal java.lang.Boolean BOOLEAN_LITERAL;
+terminal java.lang.String STRING_LITERAL;
+
+//operators
+terminal EQ; // "="
+terminal NOT; // "!"
+terminal EQEQ; // "=="
+terminal NOTEQ; // "!="
+terminal LT; // "<"
+terminal GT; // ">"
+terminal LTEQ;  // "<="
+terminal GTEQ; // ">="
+terminal ANDAND; // "&&"
+terminal OROR; // "||"
+terminal PLUS; // "+"
+terminal MINUS; // "-"
+terminal MULTIPLY; // "*"
+terminal DIVIDE; // "/"
+
+//separators
+terminal SEMICOLON; // ";"
+terminal COMMA; // ","
+terminal LPAREN; // "("
+terminal RPAREN; // ")"
+terminal LBRACE; // "{"
+terminal RBRACE; // "}"
+terminal LBRACKET; // "["
+terminal RBRACKET; // "]"
+
+
+//non-terminal
+
+non terminal program;
+
+//declarations
+non terminal function_decl;
+non terminal var_decl;
+non terminal var_decl1;
+non terminal init_declarator_list;
+non terminal init_declarator;
+non terminal init_declarator1;
+non terminal declarator;
+non terminal para_decl;
+non terminal para_decl1;
+
+
+//statements
+non terminal compound_stmt;
+non terminal stmt;
+non terminal stmt1;
+non terminal if_stmt;
+non terminal for_stmt;
+non terminal while_stmt;
+non terminal break_stmt;
+non terminal continue_stmt;
+non terminal return_stmt;
+non terminal expr_stmt;
+
+//expressions
+non terminal expr;
+non terminal opt_expr;
+non terminal expr1;
+non terminal assignment_expr;
+non terminal cond_or_expr;
+non terminal or_exprs;
+non terminal cond_and_expr;
+non terminal equality_expr;
+non terminal rel_expr;
+non terminal additive_expr;
+non terminal multiplicative_expr;
+non terminal unary_expr;
+non terminal primary_expr;
+
+//parameters
+non terminal para_list;
+non terminal proper_para_list;
+non terminal arg_list;
+non terminal proper_arg_list;
+non terminal arg;
+non terminal arg1;
+non terminal type;
+non terminal identifier;
+non terminal initializer;
+
+precedence left     LPAREN, RPAREN;
+
+start with program;
+
+program ::= function_decl program
+            | var_decl program
+            | ;
+
+//declarations
+function_decl ::= type identifier para_list compound_stmt;
+var_decl ::= type init_declarator_list SEMICOLON;
+init_declarator_list ::= init_declarator init_declarator1;
+init_declarator1 ::= COMMA init_declarator init_declarator1
+                    | ;
+init_declarator ::= declarator
+                    | declarator EQ initializer;
+declarator ::= identifier
+               | identifier LBRACKET RBRACKET
+               | identifier LBRACKET INTEGER_LITERAL RBRACKET;
+initializer ::= expr
+               | LBRACE expr expr1 RBRACE;
+expr1 ::= COMMA expr
+        | ;
+
+//types
+type ::= VOID
+        | BOOLEAN
+        | INT
+        | FLOAT;
+
+//identifiers
+identifier ::= ID;
+
+//statements
+compound_stmt ::= LBRACE var_decl1 stmt1 RBRACE;
+var_decl1 ::= var_decl var_decl1
+             | ;
+stmt1 ::= stmt stmt1
+         | ;
+
+stmt ::= compound_stmt
+        | if_stmt
+        | for_stmt
+        | while_stmt
+        | break_stmt
+        | continue_stmt
+        | return_stmt
+        | expr_stmt;
+if_stmt ::= IF LPAREN expr RPAREN stmt
+            | IF LPAREN expr RPAREN stmt ELSE stmt;
+for_stmt ::= FOR LPAREN opt_expr SEMICOLON opt_expr SEMICOLON opt_expr RPAREN;
+while_stmt ::= WHILE LPAREN expr RPAREN stmt;
+break_stmt ::= BREAK SEMICOLON;
+continue_stmt ::= CONTINUE SEMICOLON;
+return_stmt ::= RETURN opt_expr SEMICOLON;
+expr_stmt ::= opt_expr SEMICOLON;
+opt_expr ::= expr
+            | ;
+
+//expression
+expr ::= assignment_expr;
+assignment_expr ::= or_exprs cond_or_expr;
+or_exprs ::= or_exprs cond_or_expr EQ
+            | ;
+cond_or_expr ::= cond_and_expr
+                | cond_or_expr OROR cond_and_expr;
+cond_and_expr ::= equality_expr
+                 | cond_and_expr ANDAND equality_expr;
+equality_expr ::= rel_expr
+                 | equality_expr EQEQ rel_expr
+                 | equality_expr NOTEQ rel_expr;
+rel_expr ::= additive_expr
+            | rel_expr LT additive_expr
+            | rel_expr LTEQ additive_expr
+            | rel_expr GT additive_expr
+            | rel_expr GTEQ additive_expr;
+additive_expr ::= multiplicative_expr
+                 | additive_expr PLUS multiplicative_expr
+                 | additive_expr MINUS multiplicative_expr;
+multiplicative_expr ::= unary_expr
+                       | multiplicative_expr MULTIPLY unary_expr
+                       | multiplicative_expr DIVIDE unary_expr;
+unary_expr ::= PLUS unary_expr
+              | MINUS unary_expr
+              | NOT unary_expr
+              | primary_expr;
+primary_expr ::= identifier arg_list
+                | identifier
+                | identifier LBRACKET expr RBRACKET
+                | LPAREN expr RPAREN
+                | INTEGER_LITERAL
+                | FLOAT_LITERAL
+                | BOOLEAN_LITERAL
+                | STRING_LITERAL;
+
+//parameters
+para_list ::= LPAREN proper_para_list RPAREN
+             | LPAREN RPAREN;
+proper_para_list ::= para_decl para_decl1;
+para_decl1 ::= COMMA para_decl para_decl1
+              | ;
+para_decl ::= type declarator;
+arg_list ::= LPAREN proper_arg_list RPAREN
+            | LPAREN RPAREN;
+proper_arg_list ::= arg arg1;
+arg1 ::= COMMA arg arg1
+        | ;
+arg ::= expr;
+
+
+
+
+
+
+
+
+
+
+
+
+

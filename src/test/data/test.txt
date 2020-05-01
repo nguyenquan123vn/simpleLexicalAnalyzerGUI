@@ -1,0 +1,10 @@
+void foo(int i, int j) {
+  string a = true;
+  return i * j;
+}
+void bar();
+
+int main() {
+  int i = 3;
+  putIntLn( foo(i=4, i) );
+}
