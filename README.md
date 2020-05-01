@@ -8,10 +8,10 @@
   src/test/data/test.txt: simple sample input.
 
 <h5>Package</h5>
-  >mvn package
+  > mvn package
 
 The package phase does everything above and packages the jar archive of the Java classes. You can then run
     
-  >java -jar target/Compiler-SNAPSHOT-1.0.jar src/test/data/test.txt(or file path) 
+  > java -jar target/Compiler-SNAPSHOT-1.0.jar src/test/data/test.txt(or file path) 
 
 This command will run the GUI, simply click the button to choose a filee (.txt) and the result will be shown in the text area.
